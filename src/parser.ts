@@ -1380,7 +1380,12 @@ function parseWithProgramProvider(
       const moduleSymbol = checker.getSymbolAtLocation(sourceFile);
 
       if (!moduleSymbol) {
-        return docs;
+        // Check if the sourceFile is wrapped in a ts module declaration
+        if (sourceFile.locals.size > 0){
+          moduleSymbol = sourceFile.locals.values().next().value;
+        } else {
+          return docs;
+        }
       }
 
       const components = checker.getExportsOfModule(moduleSymbol);
